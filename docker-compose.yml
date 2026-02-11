@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - PDF_SERVICE_URL=http://pdf:8000
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ADMIN_CHAT_ID=${ADMIN_CHAT_ID}
+    depends_on:
+      - pdf
+    volumes:
+      - ./tmp:/app/tmp
+    restart: unless-stopped
+
+  pdf:
+    build: ./pdf_service
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+
+volumes:
+  tmp:
